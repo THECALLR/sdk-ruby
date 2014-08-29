@@ -7,18 +7,6 @@ require 'uri'
 require 'json'
 
 module THECALLR
-	class Hash
-		def symbolize_keys!
-			return self if not self.is_a?(Hash)
-			res = {}
-			self.each do |k,v|
-				res[k.to_sym] = v.is_a?(Hash) ? v.symbolize_keys! : v
-			end
-			replace(res)
-			return self
-		end
-	end
-
 	class Api
 		@login = nil
 		@password = nil
@@ -45,7 +33,7 @@ module THECALLR
 		public
 		def set_options(options)
 			if options.is_a?(Hash)
-				options.symbolize_keys!
+				options = symbolize_keys(options)
 				set_proxy(options[:proxy]) if options.has_key?(:proxy)
 			end
 		end
@@ -98,6 +86,14 @@ module THECALLR
 
 
 		private
+		def symbolize_keys(hash)
+			res = {}
+			hash.map do |k,v|
+				res[k.to_sym] = v.is_a?(Hash) ? symbolize_keys(v) : v
+			end
+			return res
+		end
+
 		def check_auth
 			if @login.nil? || @password.nil? || @login.length == 0 || @password.length == 0
 				raise ThecallrLocalException.new("CREDENTIALS_NOT_SET", 1)
