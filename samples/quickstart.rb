@@ -14,7 +14,7 @@ begin
 	# options = {
 	# 	:proxy => "https://foo:bar@example.com:8080"
 	# }
-	# thecallr = THECALLR::Thecallr.new("login", "password", options)
+	# thecallr = THECALLR::Api.new("login", "password", options)
 
 
 	## Basic example
