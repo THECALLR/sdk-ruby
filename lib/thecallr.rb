@@ -112,7 +112,7 @@ module THECALLR
 				http = Net::HTTP.new(uri.host, uri.port)
 			end
 
-			http.use_ssl = (@proxy.nil? == false && @proxy.scheme == "https") || @proxy.nil?
+			http.use_ssl = uri.scheme == "https"
 			http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 			http.open_timeout = 10
 			http.read_timeout = 10
