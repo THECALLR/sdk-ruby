@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
 	s.name                  = 'thecallr'
-	s.version               = '0.1.1'
-	s.date                  = '2014-08-28'
+	s.version               = '0.1.2'
+	s.date                  = '2014-09-01'
 	s.summary               = "THECALLR SDK"
 	s.description           = "Ruby SDK for THECALLR API"
 	s.authors               = ["Michael Jacquin"]
