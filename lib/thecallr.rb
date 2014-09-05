@@ -60,7 +60,7 @@ module THECALLR
 			check_auth()
 
 			json = {
-				:id => id.nil? || id.is_a?(Integer) == false ? rand(100..999) : id,
+				:id => id.nil? || id.is_a?(Integer) == false ? rand(999 - 100) + 100 : id,
 				:jsonrpc => "2.0",
 				:method => method,
 				:params => params.is_a?(Array) ? params : []

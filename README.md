@@ -25,9 +25,10 @@ load 'lib/thecallr.rb'
 ```
 
 ## Basic Example
+See full example in [samples/quickstart.rb](samples/quickstart.rb)
 
 ```ruby
-# Set your cedentials
+# Set your credentials
 thecallr = THECALLR::Api.new("login", "password")
 
 # 1. "call" method: each parameter of the method as an argument
@@ -46,7 +47,7 @@ thecallr.send("sms.send", my_array)
 
 ```ruby
 begin
-	# Set your cedentials
+	# Set your credentials
 	thecallr = THECALLR::Api.new("login", "password")
 
 	# This will raise an exception
