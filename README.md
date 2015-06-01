@@ -128,7 +128,7 @@ result = api.call('sms.send', 'CALLR', '+33123456789', 'Hello world!', optionSMS
 optionSMS = {
 	:push_dlr_enabled => true,
 	:push_dlr_url => 'http://yourdomain.com/push_delivery_path',
-	// :push_dlr_url_auth => 'login:password' // needed if you use Basic HTTP Authentication
+	# :push_dlr_url_auth => 'login:password' # needed if you use Basic HTTP Authentication
 }
 result = api.call('sms.send', 'CALLR', '+33123456789', 'Hello world!', optionSMS)
 ```
