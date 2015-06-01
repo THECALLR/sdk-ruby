@@ -196,7 +196,7 @@ result = api.call('did/areacode.countries')
 
 Check [did/areacode.get_list](http://thecallr.com/docs/api/services/did/areacode/#did/areacode.get_list) for DID type
 ```ruby
-result = api.call('did/areacode.get_list', 'US', null)
+result = api.call('did/areacode.get_list', 'US', nil)
 ```
 
 **Get DID types available for a specific country**
