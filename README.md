@@ -1,12 +1,12 @@
 sdk-ruby
 ========
 
-SDK in Ruby for THECALLR API
+SDK in Ruby for CALLR API
 
 ## Quick start
 Install via Rubygems
 
-    gem install thecallr
+    gem install callr
 
 Or get sources from Github
 
@@ -15,234 +15,530 @@ Or get sources from Github
 Gem
 
 ```ruby
-require 'thecallr'
+require 'callr'
+api = CALLR::Api.new('login', 'password')
 ```
 
 Source
 
 ```ruby
-load 'lib/thecallr.rb'
+load 'lib/callr.rb'
+api = CALLR::Api.new('login', 'password')
 ```
 
-## Basic Example
-See full example in [samples/quickstart.rb](samples/quickstart.rb)
-
-```ruby
-# Set your credentials
-api = THECALLR::Api.new("login", "password")
-
-# 1. "call" method: each parameter of the method as an argument
-api.call("sms.send", "THECALLR", "+33123456789", "Hello, world", {
-	:flash_message => false
-})
-
-# 2. "send" method: parameter of the method is an array
-my_array = ["THECALLR", "+33123456789", "Hello, world", {
-	:flash_message => false
-}]
-api.send("sms.send", my_array)
-```
-
-## Exception Management
+## Exception management
 
 ```ruby
 begin
-	# Set your credentials
-	api = THECALLR::Api.new("login", "password")
-
-	# This will raise an exception
-	api.call("sms.send", "THECALLR")
-
-# Exceptions handler
-rescue THECALLR::ThecallrException, THECALLR::ThecallrLocalException => e
+	api = CALLR::Api.new('login', 'password')
+	api.call('sms.send', 'CALLR')
+rescue CALLR::CallrException, CALLR::CallrLocalException => e
 	puts "ERROR: #{e.code}"
 	puts "MESSAGE: #{e.msg}"
 	puts "DATA: ", e.data
 end
 ```
 
-
-
-
 ## Usage
-**Send an SMS**
+### Sending SMS
 
-* Without options
+#### Without options
 
 ```ruby
-result = api.call('sms.send', 'CALLR', '+33123456789', 'Hello world!')
+result = api.call('sms.send', 'CALLR', '+33123456789', 'Hello world!', nil)
 ```
 
-* Personalized sender
+*Method*
+* [sms.send](http://thecallr.com/docs/api/services/sms/#sms.send)
 
-Your sender must have been authorized and respect the [sms_sender](http://thecallr.com/docs/formats/#sms_sender) format
+#### Personalized sender
+
+> Your sender must have been authorized and respect the [sms_sender](http://thecallr.com/docs/formats/#sms_sender) format
+
 ```ruby
-result = api.call('sms.send', 'Your Brand', '+33123456789', 'Hello world!')
+result = api.call('sms.send', 'Your Brand', '+33123456789', 'Hello world!', nil)
 ```
 
-* If you want to receive replies, do not set a sender, we will automatically use a shortcode
+*Method*
+* [sms.send](http://thecallr.com/docs/api/services/sms/#sms.send)
+
+#### If you want to receive replies, do not set a sender - we will automatically use a shortcode
 
 ```ruby
-result = api.call('sms.send', '', '+33123456789', 'Hello world!')
+result = api.call('sms.send', '', '+33123456789', 'Hello world!', nil)
 ```
 
-* Force GSM encoding
+*Method*
+- [sms.send](http://thecallr.com/docs/api/services/sms/#sms.send)
+
+#### Force GSM encoding
 
 ```ruby
-optionSMS = {
-	:force_encoding => 'GSM'
-}
+optionSMS = { :force_encoding => 'GSM' }
+
 result = api.call('sms.send', '', '+33123456789', 'Hello world!', optionSMS)
 ```
 
-* Long SMS (availability depends on carrier)
+*Method*
+* [sms.send](http://thecallr.com/docs/api/services/sms/#sms.send)
+
+*Objects*
+* [SMS.Options](http://thecallr.com/docs/objects/#SMS.Options)
+
+#### Long SMS (availability depends on carrier)
 
 ```ruby
-text = 'Some super mega ultra long text to test message longer than 160 characters ',
-       'Some super mega ultra long text to test message longer than 160 characters ',
-       'Some super mega ultra long text to test message longer than 160 characters'
-result = api.call('sms.send', 'CALLR', '+33123456789', text);
+text = 'Some super mega ultra long text to test message longer than 160 characters ' +
+           'Some super mega ultra long text to test message longer than 160 characters ' +
+           'Some super mega ultra long text to test message longer than 160 characters'
+result = api.call('sms.send', 'CALLR', '+33123456789', text, nil)
 ```
 
-* Specify your SMS type
+*Method*
+* [sms.send](http://thecallr.com/docs/api/services/sms/#sms.send)
+
+#### Specify your SMS nature (alerting or marketing)
 
 ```ruby
-optionSMS = {
-	:nature => 'ALERTING'
-}
+optionSMS = { :nature => 'ALERTING' }
+
 result = api.call('sms.send', 'CALLR', '+33123456789', 'Hello world!', optionSMS)
 ```
 
-* Custom data
+*Method*
+* [sms.send](http://thecallr.com/docs/api/services/sms/#sms.send)
+
+*Objects*
+* [SMS.Options](http://thecallr.com/docs/objects/#SMS.Options)
+
+#### Custom data
 
 ```ruby
-optionSMS = {
-	:user_data => '42'
-}
-result = api.call('sms.send', 'CALLR', '+33123456789', 'Hello world!', optionSMS);
-```
+optionSMS = { :user_data => '42' }
 
-* Delivery Notification
-
-```ruby
-optionSMS = {
-	:push_dlr_enabled => true,
-	:push_dlr_url => 'http://yourdomain.com/push_delivery_path',
-	# :push_dlr_url_auth => 'login:password' # needed if you use Basic HTTP Authentication
-}
 result = api.call('sms.send', 'CALLR', '+33123456789', 'Hello world!', optionSMS)
 ```
 
-**Get an SMS**
+*Method*
+* [sms.send](http://thecallr.com/docs/api/services/sms/#sms.send)
+
+*Objects*
+* [SMS.Options](http://thecallr.com/docs/objects/#SMS.Options)
+
+
+#### Delivery Notification - set URL to receive notifications
+
+```ruby
+optionSMS = {
+    :push_dlr_enabled => true,
+    :push_dlr_url => 'http://yourdomain.com/push_delivery_path',
+    # :push_dlr_url_auth => 'login:password' # needed if you use Basic HTTP Authentication
+}
+
+result = api.call('sms.send', 'CALLR', '+33123456789', 'Hello world!', optionSMS)
+```
+
+*Method*
+* [sms.send](http://thecallr.com/docs/api/services/sms/#sms.send)
+
+*Objects*
+* [SMS.Options](http://thecallr.com/docs/objects/#SMS.Options)
+
+
+### Inbound SMS - set URL to receive inbound messages (MO) and replies
+
+> **Do not set a sender if you want to receive replies** - we will automatically use a shortcode.
+
+```ruby
+optionSMS = {
+    :push_mo_enabled => true,
+    :push_mo_url => 'http://yourdomain.com/mo_delivery_path',
+    # :push_mo_url_auth => 'login:password' # needed if you use Basic HTTP Authentication
+}
+
+result = api.call('sms.send', '', '+33123456789', 'Hello world!', optionSMS)
+```
+
+*Method*
+* [sms.send](http://thecallr.com/docs/api/services/sms/#sms.send)
+
+*Objects*
+* [SMS.Options](http://thecallr.com/docs/objects/#SMS.Options)
+
+
+### Get an SMS
+
 ```ruby
 result = api.call('sms.get', 'SMSHASH')
 ```
 
-**Get SMS global options**
+*Method*
+* [sms.get](http://thecallr.com/docs/api/services/sms/#sms.get)
+
+*Objects*
+* [SMS](http://thecallr.com/docs/objects/#SMS)
+
+### SMS Global Settings
+
+#### Get settings
+
 ```ruby
 result = api.call('sms.get_settings')
 ```
-Return an [SMS.settings](http://thecallr.com/docs/objects/#SMS.Settings) object
 
-**Set SMS global options**
+*Method*
+* [sms.get_settings](http://thecallr.com/docs/api/services/sms/#sms.get_settings)
 
-Add options that you want to change in the object
-```ruby
-options = {
-	:push_dlr_enabled => true,
-	:push_dlr_url => 'http://yourdomain.com/push_delivery_path'
-}
-result = api.call('sms.set_settings', options)
-```
-Return the updated [SMS.settings](http://thecallr.com/docs/objects/#SMS.Settings) object
+*Objects*
+* [SMS.settings](http://thecallr.com/docs/objects/#SMS.Settings)
 
-***
 
-**Realtime**
+#### Set settings
 
-* Create REALTIME app with callback URL
+> Add options that you want to change in the object
 
 ```ruby
-options = {
-	:url => 'http://yourdomain.com/realtime_callback_url'
+settings = {
+    :push_dlr_enabled => true,
+    :push_dlr_url => 'http://yourdomain.com/push_delivery_path',
+    :push_mo_enabled => true,
+    :push_mo_url => 'http://yourdomain.com/mo_delivery_path'
 }
-result = api.call('app.create', 'REALTIME10', 'Your app name', options)
+
+result = api.call('sms.set_settings', settings)
 ```
 
-* Start a Real-time outbound call
+> Returns the updated settings.
+
+*Method*
+* [sms.set_settings](http://thecallr.com/docs/api/services/sms/#sms.set_settings)
+
+*Objects*
+* [SMS.settings](http://thecallr.com/docs/objects/#SMS.Settings)
+
+********************************************************************************
+
+### REALTIME
+
+#### Create a REALTIME app with a callback URL
+
+```ruby
+options = {
+    :url => 'http://yourdomain.com/realtime_callback_url'
+}
+
+result = api.call('apps.create', 'REALTIME10', 'Your app name', options)
+```
+
+*Method*
+* [apps.create](http://thecallr.com/docs/api/services/apps/#apps.create)
+
+*Objects*
+* [REALTIME10](http://thecallr.com/docs/objects/#REALTIME10)
+* [App](http://thecallr.com/docs/objects/#App)
+
+#### Start a REALTIME outbound call
 
 ```ruby
 target = {
-	:number => '+33132456789',
-	:timeout => 30
+    :number => '+33132456789',
+    :timeout => 30
 }
 
 callOptions = {
-	:cdr_field => '42',
-	:cli => 'BLOCKED'
+    :cdr_field => '42',
+    :cli => 'BLOCKED'
 }
 
 result = api.call('dialr/call.realtime', 'appHash', target, callOptions)
 ```
 
-***
+*Method*
+* [dialr/call.realtime](http://thecallr.com/docs/api/services/dialr/call/#dialr/call.realtime)
 
-**List available countries with DID availability**
+*Objects*
+* [Target](http://thecallr.com/docs/objects/#Target)
+* [REALTIME10.Call.Options](http://thecallr.com/docs/objects/#REALTIME10.Call.Options)
+
+********************************************************************************
+
+### DIDs
+
+#### List available countries with DID availability
+
 ```ruby
 result = api.call('did/areacode.countries')
 ```
 
-**Get area codes available for a specific country and DID type**
+*Method*
+* [did/areacode.countries](http://thecallr.com/docs/api/services/did/areacode/#did/areacode.countries)
 
-Check [did/areacode.get_list](http://thecallr.com/docs/api/services/did/areacode/#did/areacode.get_list) for DID type
+*Objects*
+* [DID.Country](http://thecallr.com/docs/objects/#DID.Country)
+
+#### Get area codes available for a specific country and DID type
+
 ```ruby
 result = api.call('did/areacode.get_list', 'US', nil)
 ```
 
-**Get DID types available for a specific country**
+*Method*
+* [did/areacode.get_list](http://thecallr.com/docs/api/services/did/areacode/#did/areacode.get_list)
+
+*Objects*
+* [DID.AreaCode](http://thecallr.com/docs/objects/#DID.AreaCode)
+
+#### Get DID types available for a specific country
+
 ```ruby
 result = api.call('did/areacode.types', 'US')
 ```
 
-***
+*Method*
+* [did/areacode.types](http://thecallr.com/docs/api/services/did/areacode/#did/areacode.types)
 
-**Create a conference**
+*Objects*
+* [DID.Type](http://thecallr.com/docs/objects/#DID.Type)
 
-Check [conference/10.create_room](http://thecallr.com/docs/api/services/conference/10/#conference/10.create_room) for details
-[params](http://thecallr.com/docs/objects/#CONFERENCE10)
-[access](http://thecallr.com/docs/objects/#CONFERENCE10.Room.Access)
+#### Buy a DID (after a reserve)
+
 ```ruby
-params = {
-	:open => true
-}
+result = api.call('did/store.buy_order', 'OrderToken')
+```
+
+*Method*
+* [did/store.buy_order](http://thecallr.com/docs/api/services/did/store/#did/store.buy_order)
+
+*Objects*
+* [DID.Store.BuyStatus](http://thecallr.com/docs/objects/#DID.Store.BuyStatus)
+
+#### Cancel your order (after a reserve)
+
+```ruby
+result = api.call('did/store.cancel_order', 'OrderToken')
+```
+
+*Method*
+* [did/store.cancel_order](http://thecallr.com/docs/api/services/did/store/#did/store.cancel_order)
+
+#### Cancel a DID subscription
+
+```ruby
+result = api.call('did/store.cancel_subscription', 'DID ID')
+```
+
+*Method*
+* [did/store.cancel_subscription](http://thecallr.com/docs/api/services/did/store/#did/store.cancel_subscription)
+
+#### View your store quota status
+
+```ruby
+result = api.call('did/store.get_quota_status')
+```
+
+*Method*
+* [did/store.get_quota_status](http://thecallr.com/docs/api/services/did/store/#did/store.get_quota_status)
+
+*Objects*
+* [DID.Store.QuotaStatus](http://thecallr.com/docs/objects/#DID.Store.QuotaStatus)
+
+#### Get a quote without reserving a DID
+
+```ruby
+result = api.call('did/store.get_quote', 0, 'GOLD', 1)
+```
+
+*Method*
+* [did/store.get_quote](http://thecallr.com/docs/api/services/did/store/#did/store.get_quote)
+
+*Objects/
+* [DID.Store.Quote](http://thecallr.com/docs/objects/#DID.Store.Quote)
+
+#### Reserve a DID
+
+```ruby
+result = api.call('did/store.reserve', 0, 'GOLD', 1, 'RANDOM')
+```
+
+*Method*
+* [did/store.reserve](http://thecallr.com/docs/api/services/did/store/#did/store.reserve)
+
+*Objects*
+* [DID.Store.Reservation](http://thecallr.com/docs/objects/#DID.Store.Reservation)
+
+#### View your order
+
+```ruby
+result = api.call('did/store.view_order', 'OrderToken')
+```
+
+*Method*
+* [did/store.buy_order](http://thecallr.com/docs/api/services/did/store/#did/store.view_order)
+
+*Objects*
+* [DID.Store.Reservation](http://thecallr.com/docs/objects/#DID.Store.Reservation)
+
+********************************************************************************
+
+### Conferencing
+
+#### Create a conference room
+
+```ruby
+params = { :open => true }
 access = []
 
 result = api.call('conference/10.create_room', 'room name', params, access)
 ```
 
-* Assign a DID to a room
+*Method*
+* [conference/10.create_room](http://thecallr.com/docs/api/services/conference/10/#conference/10.create_room)
+
+*Objects*
+* [CONFERENCE10](http://thecallr.com/docs/objects/#CONFERENCE10)
+* [CONFERENCE10.Room.Access](http://thecallr.com/docs/objects/#CONFERENCE10.Room.Access)
+
+#### Assign a DID to a room
 
 ```ruby
 result = api.call('conference/10.assign_did', 'Room ID', 'DID ID')
 ```
 
-* Create a PIN protected conference
+*Method*
+* [conference/10.assign_did](http://thecallr.com/docs/api/services/conference/10/#conference/10.assign_did)
+
+#### Create a PIN protected conference room
 
 ```ruby
-params = {
-	:open => true
-}
+params = { :open => true }
 access = [
-	{ :pin => '1234', :level => 'GUEST' },
-	{ :pin => '4321', :level => 'ADMIN', :phone_number => '+33123456789' }
-];
+    { :pin => '1234', :level => 'GUEST' },
+    { :pin => '4321', :level => 'ADMIN', :phone_number => '+33123456789' }
+]
 
 result = api.call('conference/10.create_room', 'room name', params, access)
 ```
 
-* Call a room access
+*Method*
+* [conference/10.create_room](http://thecallr.com/docs/api/services/conference/10/#conference/10.create_room)
+
+*Objects*
+* [CONFERENCE10](http://thecallr.com/docs/objects/#CONFERENCE10)
+* [CONFERENCE10.Room.Access](http://thecallr.com/docs/objects/#CONFERENCE10.Room.Access)
+
+#### Call a room access
 
 ```ruby
 result = api.call('conference/10.call_room_access', 'Room Access ID', 'BLOCKED', true)
 ```
 
+*Method*
+* [conference/10.call_room_access](http://thecallr.com/docs/api/services/conference/10/#conference/10.call_room_access)
+
+********************************************************************************
+
+### Media
+
+#### List your medias
+
+```ruby
+result = api.call('media/library.get_list', nil)
+```
+
+*Method*
+* [media/library.get_list](http://thecallr.com/docs/api/services/media/library/#media/library.get_list)
+
+#### Create an empty media
+
+```ruby
+result = api.call('media/library.create', 'name')
+```
+
+*Method*
+* [media/library.create](http://thecallr.com/docs/api/services/media/library/#media/library.create)
+
+#### Upload a media
+
+```ruby
+media_id = 0
+
+result = api.call('media/library.set_content', media_id, 'text', 'base64_audio_data')
+```
+
+*Method*
+* [media/library.set_content](http://thecallr.com/docs/api/services/media/library/#media/library.set_content)
+
+#### Use Text-to-Speech
+
+```ruby
+media_id = 0
+
+result = api.call('media/tts.set_content', media_id, 'Hello world!', 'TTS-EN-GB_SERENA', nil)
+```
+
+*Method*
+* [media/tts.set_content](http://thecallr.com/docs/api/services/media/tts/#media/tts.set_content)
+
+********************************************************************************
+
+### CDR
+
+#### Get inbound or outbound CDRs
+
+```ruby
+from = 'YYYY-MM-DD HH:MM:SS'
+to = 'YYYY-MM-DD HH:MM:SS'
+
+result = api.call('cdr.get', 'OUT', from, to, nil, nil)
+```
+
+*Method*
+* [cdr.get](http://thecallr.com/docs/api/services/cdr/#cdr.get)
+
+*Objects*
+* [CDR.In](http://thecallr.com/docs/objects/#CDR.In)
+* [CDR.Out](http://thecallr.com/docs/objects/#CDR.Out)
+
+
+********************************************************************************
+
+### SENDR
+
+#### Broadcast messages to a target (BETA)
+
+```ruby
+target = {
+    :number => '+33123456789',
+    :timeout => 30
+}
+
+messages = [131, 132, 'TTS|TTS_EN-GB_SERENA|Hello world! how are you ? I hope you enjoy this call. good bye.']
+
+options = {
+    :cdr_field => 'userData',
+    :cli => 'BLOCKED',
+    :loop => 2
+}
+
+result = api.call('sendr/simple.broadcast_1', target, messages, options)
+```
+
+##### Without options
+
+```ruby
+target = {
+    :number => '+33123456789',
+    :timeout => 30
+}
+
+messages = [131, 132, 134]
+
+result = api.call('sendr/simple.broadcast_1', target, messages, nil)
+```
+
+*Method*
+* [sendr/simple.broadcast_1](http://thecallr.com/docs/api/services/sendr/simple/#sendr/simple.broadcast_1)
+
+*Objects*
+* [Target](http://thecallr.com/docs/objects/#Target)
+* [SENDR.Simple.Broadcast1.Options](http://thecallr.com/docs/objects/#SENDR.Simple.Broadcast1.Options)
