@@ -260,6 +260,19 @@ result = api.call('dialr/call.realtime', 'appHash', target, callOptions)
 * [Target](http://thecallr.com/docs/objects/#Target)
 * [REALTIME10.Call.Options](http://thecallr.com/docs/objects/#REALTIME10.Call.Options)
 
+#### Inbound Calls - Assign a phone number to a REALTIME app
+
+```ruby
+result = api.call('apps.assign_did', 'appHash', 'DID ID')
+```
+
+*Method*
+* [apps.assign_did](http://thecallr.com/docs/api/services/apps/#apps.assign_did)
+
+*Objects*
+* [App](http://thecallr.com/docs/objects/#App)
+* [DID](http://thecallr.com/docs/objects/#DID)
+
 ********************************************************************************
 
 ### DIDs
