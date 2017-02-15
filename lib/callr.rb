@@ -16,7 +16,7 @@ module CALLR
 			"Content-Type" => "application/json-rpc; charset=utf-8"
 		}
 
-		API_URL = "https://api.thecallr.com/"
+		API_URL = "https://api.callr.com/json-rpc/v1.1/"
 
 		###
 		# Initialization
