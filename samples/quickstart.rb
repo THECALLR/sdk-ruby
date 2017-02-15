@@ -19,12 +19,12 @@ begin
 
 	## Basic example
 	# 1. "call" method: each parameter of the method as an argument
-	api.call("sms.send", "CALLR", "+33123456789", "Hello, world", {
+	api.call("sms.send", "SMS", "+33123456789", "Hello, world", {
 		:flash_message => false
 	})
 
 	# 2. "send" method: parameter of the method is an array
-	my_array = ["CALLR", "+33123456789", "Hello, world", {
+	my_array = ["SMS", "+33123456789", "Hello, world", {
 		:flash_message => false
 	}]
 	api.send("sms.send", my_array)
