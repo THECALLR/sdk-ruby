@@ -6,6 +6,8 @@ require 'net/https'
 require 'uri'
 require 'json'
 
+SDK_VERSION = "1.1.1"
+
 module CALLR
 	class Api
 		@login = nil
@@ -71,6 +73,7 @@ module CALLR
 
 			req = Net::HTTP::Post.new(uri.request_uri, @headers)
 			req.basic_auth(@login, @password)
+			req.add_field('User-Agent', "sdk=RUBY; sdk-version=#{SDK_VERSION}; lang-version=#{RUBY_VERSION}; platform=#{RUBY_PLATFORM}")
 
 			begin
 				res = http.request(req, json)
