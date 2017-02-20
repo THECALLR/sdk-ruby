@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
 	s.name                   = 'callr'
-	s.version                = '1.1.0'
+	s.version                = '1.1.1'
 	s.date                   = '2017-02-15'
 	s.summary                = "CALLR SDK"
 	s.description            = "Ruby SDK for CALLR API"
