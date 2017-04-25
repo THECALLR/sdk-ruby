@@ -13,6 +13,7 @@ module CALLR
     @login = nil
     @password = nil
     @proxy = nil
+    @login_as = nil
     @headers = {
       "Expect" => "",
       "Content-Type" => "application/json-rpc; charset=utf-8"
@@ -38,6 +39,19 @@ module CALLR
         options = symbolize_keys(options)
         set_proxy(options[:proxy]) if options.has_key?(:proxy)
       end
+    end
+
+    def set_login_as(type, target)
+      case type
+      when 'user'
+        type = 'User.login'
+      when 'account'
+        type = 'Account.hash'
+      else
+        raise CallrLocalException.new("INVALID_LOGIN_AS_TYPE", 2)
+      end
+
+      @login_as = "#{type} #{target}"
     end
 
     def set_proxy(proxy)
@@ -74,6 +88,7 @@ module CALLR
       req = Net::HTTP::Post.new(uri.request_uri, @headers)
       req.basic_auth(@login, @password)
       req.add_field('User-Agent', "sdk=RUBY; sdk-version=#{SDK_VERSION}; lang-version=#{RUBY_VERSION}; platform=#{RUBY_PLATFORM}")
+      req.add_field('CALLR-Login-As', @login_as) unless @login_as.to_s.empty?
 
       begin
         res = http.request(req, json)
