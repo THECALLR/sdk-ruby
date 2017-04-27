@@ -30,16 +30,22 @@ api = CALLR::Api.new('login', 'password')
 
 ```ruby
 begin
-	api = CALLR::Api.new('login', 'password')
-	api.call('sms.send', 'SMS')
+  api = CALLR::Api.new('login', 'password')
+  api.call('sms.send', 'SMS')
 rescue CALLR::CallrException, CALLR::CallrLocalException => e
-	puts "ERROR: #{e.code}"
-	puts "MESSAGE: #{e.msg}"
-	puts "DATA: ", e.data
+  puts "ERROR: #{e.code}"
+  puts "MESSAGE: #{e.msg}"
+  puts "DATA: ", e.data
 end
 ```
 
 ## Usage
+### login as :
+```ruby
+api.set_login_as('user', 'foo') # login as user foo
+api.set_login_as('account', 'foo') # login as account foo
+```
+
 ### Sending SMS
 
 #### Without options
