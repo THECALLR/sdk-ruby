@@ -6,7 +6,7 @@ require 'net/https'
 require 'uri'
 require 'json'
 
-SDK_VERSION = "1.1.1"
+SDK_VERSION = "1.2.0"
 
 module CALLR
   class Api
