@@ -44,6 +44,7 @@ end
 ```ruby
 api.set_login_as('user', 'foo') # login as user foo
 api.set_login_as('account', 'foo') # login as account foo
+api.set_login_as(nil, nil) # Remove login-as
 ```
 
 ### Sending SMS
