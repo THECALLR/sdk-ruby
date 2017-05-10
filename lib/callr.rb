@@ -42,6 +42,11 @@ module CALLR
     end
 
     def set_login_as(type, target)
+      if type.nil? and target.nil?
+        @login_as = nil
+        return
+      end
+
       case type
       when 'user'
         type = 'User.login'
