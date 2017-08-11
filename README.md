@@ -20,6 +20,9 @@ api = CALLR::Api.new
 
 # login + password auth
 api.set_auth(CALLR::LoginPasswordAuth.new('login', 'password')
+
+# or for a api-key auth
+api.set_auth(CALLR::ApiKeyAuth.new('apiKey')
 ```
 
 Source
@@ -29,6 +32,9 @@ load 'lib/callr.rb'
 
 # login + password auth
 api.set_auth(CALLR::LoginPasswordAuth.new('login', 'password')
+
+# or for a api-key auth
+api.set_auth(CALLR::ApiKeyAuth.new('apiKey')
 ```
 
 Note that for the next examples, we will consider you are using the login + password auth

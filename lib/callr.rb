@@ -200,6 +200,40 @@ module CALLR
     end
   end
 
+  class ApiKeyAuth
+    @apiKey = nil
+    @login_as = nil
+
+    def initialize(apiKey)
+      @apiKey = apiKey
+    end
+
+    def apply(request)
+      request.add_field("Authentication", "Api-Key #{@apiKey}")
+      request.add_field('CALLR-Login-As', @login_as) unless @login_as.to_s.empty?
+
+      return request
+    end
+
+    def log_as(type, target)
+      if type.nil? and target.nil?
+        @login_as = nil
+        return
+      end
+
+      case type
+      when 'user'
+        type = 'User.login'
+      when 'account'
+        type = 'Account.hash'
+      else
+        raise CallrLocalException.new("INVALID_LOGIN_AS_TYPE", 2)
+      end
+
+      @login_as = "#{type} #{target}"
+    end
+  end
+
   class CallrException < Exception
     attr_reader :msg
     attr_reader :code

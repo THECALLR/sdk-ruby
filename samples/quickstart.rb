@@ -19,6 +19,9 @@ begin
   # login password auth
   api.set_auth(CALLR::LoginPasswordAuth.new("login", "password"))
 
+  # or api-key auth
+  api.set_auth(CALLR::ApiKeyAuth.new("your api key"))
+
 
   ## Basic example
   # 1. "call" method: each parameter of the method as an argument
