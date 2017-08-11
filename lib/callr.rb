@@ -6,14 +6,12 @@ require 'net/https'
 require 'uri'
 require 'json'
 
-SDK_VERSION = "1.2.0"
+SDK_VERSION = "1.3.0"
 
 module CALLR
   class Api
-    @login = nil
-    @password = nil
+    @auth = nil
     @proxy = nil
-    @login_as = nil
     @headers = {
       "Expect" => "",
       "Content-Type" => "application/json-rpc; charset=utf-8"
@@ -23,12 +21,18 @@ module CALLR
 
     ###
     # Initialization
+    #
+    # The login and password arguments are now deprecated since 1.3.0
+    # Use set_auth with proper auth mecanism instead
+    #
     # @param string login
     # @param string password
     ###
-    def initialize(login, password, options = nil)
-      @login = login
-      @password = password
+    def initialize(login = nil, password = nil, options = nil)
+      if not login.nil? and not password.nil?
+        set_auth(LoginPasswordAuth.new(login, password))
+      end
+
       set_options(options)
     end
 
@@ -41,22 +45,20 @@ module CALLR
       end
     end
 
+    def set_auth(auth)
+      @auth = auth
+    end
+
+    #
+    # Set a login-as
+    #
+    # This method is deprecated since 1.3.0.
+    # Call `log_as` on your authenticator
+    #
+    # @param string type log as type (user, customer)
+    # @param string target target (user id, account hash)
     def set_login_as(type, target)
-      if type.nil? and target.nil?
-        @login_as = nil
-        return
-      end
-
-      case type
-      when 'user'
-        type = 'User.login'
-      when 'account'
-        type = 'Account.hash'
-      else
-        raise CallrLocalException.new("INVALID_LOGIN_AS_TYPE", 2)
-      end
-
-      @login_as = "#{type} #{target}"
+      @auth.log_as(type, target)
     end
 
     def set_proxy(proxy)
@@ -91,9 +93,9 @@ module CALLR
       http = http_or_http_proxy(uri)
 
       req = Net::HTTP::Post.new(uri.request_uri, @headers)
-      req.basic_auth(@login, @password)
       req.add_field('User-Agent', "sdk=RUBY; sdk-version=#{SDK_VERSION}; lang-version=#{RUBY_VERSION}; platform=#{RUBY_PLATFORM}")
-      req.add_field('CALLR-Login-As', @login_as) unless @login_as.to_s.empty?
+
+      @auth.apply(req)
 
       begin
         res = http.request(req, json)
@@ -159,6 +161,42 @@ module CALLR
       rescue JSON::ParserError
         raise CallrException.new("INVALID_RESPONSE", -3, {:response => res.body})
       end
+    end
+  end
+
+  class LoginPasswordAuth
+    @login = nil
+    @password = nil
+    @login_as = nil
+
+    def initialize(login, password)
+      @login = login
+      @password = password
+    end
+
+    def apply(request)
+      request.basic_auth(@login, @password)
+      request.add_field('CALLR-Login-As', @login_as) unless @login_as.to_s.empty?
+
+      return request
+    end
+
+    def log_as(type, target)
+      if type.nil? and target.nil?
+        @login_as = nil
+        return
+      end
+
+      case type
+      when 'user'
+        type = 'User.login'
+      when 'account'
+        type = 'Account.hash'
+      else
+        raise CallrLocalException.new("INVALID_LOGIN_AS_TYPE", 2)
+      end
+
+      @login_as = "#{type} #{target}"
     end
   end
 

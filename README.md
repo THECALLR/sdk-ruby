@@ -16,21 +16,30 @@ Gem
 
 ```ruby
 require 'callr'
-api = CALLR::Api.new('login', 'password')
+api = CALLR::Api.new
+
+# login + password auth
+api.set_auth(CALLR::LoginPasswordAuth.new('login', 'password')
 ```
 
 Source
 
 ```ruby
 load 'lib/callr.rb'
-api = CALLR::Api.new('login', 'password')
+
+# login + password auth
+api.set_auth(CALLR::LoginPasswordAuth.new('login', 'password')
 ```
+
+Note that for the next examples, we will consider you are using the login + password auth
 
 ## Exception management
 
 ```ruby
 begin
-  api = CALLR::Api.new('login', 'password')
+  api = CALLR::Api.new
+  api.set_auth(CALLR::LoginPasswordAuth.new('login', 'password')
+
   api.call('sms.send', 'SMS')
 rescue CALLR::CallrException, CALLR::CallrLocalException => e
   puts "ERROR: #{e.code}"
@@ -42,9 +51,11 @@ end
 ## Usage
 ### login as :
 ```ruby
-api.set_login_as('user', 'foo') # login as user foo
-api.set_login_as('account', 'foo') # login as account foo
-api.set_login_as(nil, nil) # Remove login-as
+api.set_auth(auth = CALLR::LoginPasswordAuth.new('login', 'password')
+
+auth.log_as('user', 'foo') # login as user foo
+auth.log_as('account', 'foo') # login as account foo
+auth.log_as(nil, nil) # Remove login-as
 ```
 
 ### Sending SMS
@@ -223,7 +234,7 @@ result = api.call('sms.set_settings', settings)
 *Objects*
 * [SMS.settings](https://www.callr.com/docs/objects/#SMS.Settings)
 
-********************************************************************************
+--------------------------------------------------------------------------------
 
 ### REALTIME
 
@@ -280,7 +291,7 @@ result = api.call('apps.assign_did', 'appHash', 'DID ID')
 * [App](https://www.callr.com/docs/objects/#App)
 * [DID](https://www.callr.com/docs/objects/#DID)
 
-********************************************************************************
+--------------------------------------------------------------------------------
 
 ### DIDs
 
@@ -371,7 +382,7 @@ result = api.call('did/store.get_quote', 0, 'GOLD', 1)
 *Method*
 * [did/store.get_quote](https://www.callr.com/docs/api/services/did/store/#did/store.get_quote)
 
-*Objects/
+*Objects*
 * [DID.Store.Quote](https://www.callr.com/docs/objects/#DID.Store.Quote)
 
 #### Reserve a DID
@@ -398,7 +409,7 @@ result = api.call('did/store.view_order', 'OrderToken')
 *Objects*
 * [DID.Store.Reservation](https://www.callr.com/docs/objects/#DID.Store.Reservation)
 
-********************************************************************************
+--------------------------------------------------------------------------------
 
 ### Conferencing
 
@@ -455,7 +466,7 @@ result = api.call('conference/10.call_room_access', 'Room Access ID', 'BLOCKED',
 *Method*
 * [conference/10.call_room_access](https://www.callr.com/docs/api/services/conference/10/#conference/10.call_room_access)
 
-********************************************************************************
+--------------------------------------------------------------------------------
 
 ### Media
 
@@ -499,7 +510,7 @@ result = api.call('media/tts.set_content', media_id, 'Hello world!', 'TTS-EN-GB_
 *Method*
 * [media/tts.set_content](https://www.callr.com/docs/api/services/media/tts/#media/tts.set_content)
 
-********************************************************************************
+--------------------------------------------------------------------------------
 
 ### CDR
 
@@ -520,7 +531,7 @@ result = api.call('cdr.get', 'OUT', from, to, nil, nil)
 * [CDR.Out](https://www.callr.com/docs/objects/#CDR.Out)
 
 
-********************************************************************************
+--------------------------------------------------------------------------------
 
 ### SENDR
 
